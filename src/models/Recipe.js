@@ -8,8 +8,10 @@ export default class Recipe {
         vegetarian = false,
         favorite = false,
         ingredients,
-        steps
+        steps,
+        photoPath = ""
     ) {
+        this.photoPath = photoPath;
         this.name = name;
         this.description = description;
         this.author = author;

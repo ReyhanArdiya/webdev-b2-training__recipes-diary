@@ -1,11 +1,11 @@
-import { useState } from "react";
-import Recipe from "./models/Recipe";
 import {
     // collection, addDoc,
     doc,
     setDoc
 } from "firebase/firestore";
+import { useState } from "react";
 import { db } from "./firebase";
+import Recipe from "./models/Recipe";
 
 const RecipeForm = () => {
     const [name, setName] = useState("");
