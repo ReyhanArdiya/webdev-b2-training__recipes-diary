@@ -1,14 +1,37 @@
 /* eslint-disable react/prop-types */
+import { deleteDoc, deleteField, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { db } from "./firebase";
 
-const RecipeItem = ({ id, name, description, author, imagePath }) => {
+const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     const [nameVal, setNameVal] = useState(name);
     const [descriptionVal, setDescriptionVal] = useState(description);
     const [authorVal, setAuthorVal] = useState(author);
     const [imageSrc, setImageSrc] = useState(imagePath);
 
-    const updateDocument = async () => {};
-    const deleteDocument = async () => {};
+    // DocumentReference
+    const docRef = doc(db, "recipes", id);
+
+    const updateDocument = async () => {
+        const newChanges = {
+            name: nameVal,
+            description: descriptionVal,
+            author: authorVal,
+            photoPath: imageSrc
+        };
+
+        // await setDoc(docRef, newChanges, {
+        //     merge: true
+        // });
+        await updateDoc(docRef, newChanges);
+    };
+    const deleteDocument = async () => {
+        // await deleteDoc(docRef);
+        await updateDoc(docRef, {
+            favorite: deleteField(),
+            steps: deleteField()
+        });
+    };
 
     useEffect(() => {
         const getImage = async () => {
@@ -20,7 +43,7 @@ const RecipeItem = ({ id, name, description, author, imagePath }) => {
         };
 
         getImage();
-    });
+    }, []);
     const uploadNewPhoto = async () => {};
     const deletePhoto = async () => {};
 
@@ -59,7 +82,9 @@ const RecipeItem = ({ id, name, description, author, imagePath }) => {
                             width: "100%"
                         }}
                     >
-                        <label htmlFor="recipeName">Recipe Name</label>
+                        <p>Recipe Minute: {minutes}</p>
+
+                        <label htmlFor="recipeName">Recipe Name: {name}</label>
                         <input
                             type="text"
                             id="recipeName"

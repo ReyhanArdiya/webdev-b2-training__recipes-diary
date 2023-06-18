@@ -95,7 +95,7 @@ const RecipeForm = () => {
                         type="number"
                         id="minutes"
                         value={minutes}
-                        onChange={e => setMinutes(e.target.value)}
+                        onChange={e => setMinutes(+e.target.value)}
                     />
                 </div>
                 <div>
