@@ -26,11 +26,11 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
         await updateDoc(docRef, newChanges);
     };
     const deleteDocument = async () => {
-        // await deleteDoc(docRef);
-        await updateDoc(docRef, {
-            favorite: deleteField(),
-            steps: deleteField()
-        });
+        await deleteDoc(docRef);
+        // await updateDoc(docRef, {
+        //     favorite: deleteField(),
+        //     steps: deleteField()
+        // });
     };
 
     useEffect(() => {
@@ -44,7 +44,9 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
 
         getImage();
     }, []);
-    const uploadNewPhoto = async () => {};
+    const uploadNewPhoto = async () => {
+        // TODO save in recipes/{userId}/{documentId}
+    };
     const deletePhoto = async () => {};
 
     return (

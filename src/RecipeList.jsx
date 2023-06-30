@@ -56,11 +56,11 @@ const RecipeList = () => {
 
     useEffect(() => {
         const recipesCollection = collection(db, "recipes");
-        const twentyMinutesRecipes = query(
-            recipesCollection,
-            where("minutes", "==", 20),
-            orderBy("name", "asc")
-        );
+        // const twentyMinutesRecipes = query(
+        //     recipesCollection,
+        //     where("minutes", "==", 20),
+        //     orderBy("name", "asc")
+        // );
 
         const callback = async snapshot => {
             setRecipes(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
@@ -72,7 +72,7 @@ const RecipeList = () => {
 
         const unsubscribe = onSnapshot(
             // Reference/Query,
-            twentyMinutesRecipes,
+            recipesCollection,
             // Callback
             callback,
             // Error Callback
@@ -88,7 +88,7 @@ const RecipeList = () => {
             author={recipe.author}
             description={recipe.description}
             name={recipe.name}
-            imagePath={recipe.photoPath}
+            imagePath={recipe.photoPath || ""}
             id={recipe.id}
             minutes={recipe.minutes}
         />
