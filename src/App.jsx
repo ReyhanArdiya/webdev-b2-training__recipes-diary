@@ -1,6 +1,5 @@
 import RecipeForm from "./RecipeForm";
 import RecipeList from "./RecipeList";
-import UserArea from "./UserArea";
 
 function App() {
     // TODO get user and hide recipe area if no user
@@ -9,7 +8,6 @@ function App() {
     return (
         <main>
             <h1>Recipes Diary</h1>
-            <UserArea />
             <RecipeForm />
             <RecipeList />
         </main>
