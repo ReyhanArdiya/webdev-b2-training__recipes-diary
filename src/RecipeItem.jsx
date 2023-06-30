@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { deleteDoc, deleteField, doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "./firebase";
 
@@ -10,7 +10,7 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     const [imageSrc, setImageSrc] = useState(imagePath);
     const [photoFile, setPhotoFile] = useState(null);
 
-    // DocumentReference
+    // DocumentReference of this recipe
     const docRef = doc(db, "recipes", id);
 
     const updateDocument = async () => {
@@ -46,10 +46,24 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
         getImage();
     }, []);
     const uploadNewPhoto = async () => {
-        // TODO save in recipes/{userId}/{documentId}
-        console.log(photoFile);
+        try {
+            // TODO save in recipes/{userId}/{documentId}
+            // const imageRef = // fill this
+
+            // TODO update the photoPath field of the Recipe document with StorageReference.fullPath
+            await updateDoc(docRef, {
+                // photoPath: storageRef.fullPath
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
-    const deletePhoto = async () => {};
+    const deletePhoto = async () => {
+        try {
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
         <div
@@ -139,6 +153,7 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
                         type="file"
                         id="New Photo"
                         onChange={e => setPhotoFile(e.target.files[0])}
+                        accept="image/*"
                     />
                     <button type="button" onClick={uploadNewPhoto}>
                         Upload New Photo
