@@ -9,7 +9,8 @@ export default class Recipe {
         favorite = false,
         ingredients,
         steps,
-        photoPath = ""
+        photoPath = "",
+        userId = ""
     ) {
         this.photoPath = photoPath;
         this.name = name;
@@ -23,5 +24,6 @@ export default class Recipe {
         this.favorite = favorite;
         this.ingredients = ingredients;
         this.steps = steps;
+        this.userId = userId;
     }
 }

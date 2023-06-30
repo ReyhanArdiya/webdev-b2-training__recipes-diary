@@ -4,7 +4,7 @@ import {
     setDoc
 } from "firebase/firestore";
 import { useState } from "react";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import Recipe from "./models/Recipe";
 
 const RecipeForm = () => {
@@ -30,7 +30,9 @@ const RecipeForm = () => {
             vegetarian,
             favorite,
             ingredients.split(";"),
-            steps.split(";")
+            steps.split(";"),
+            "",
+            auth.currentUser?.uid
         );
 
         // const recipesCollection = collection(db, "recipes");
