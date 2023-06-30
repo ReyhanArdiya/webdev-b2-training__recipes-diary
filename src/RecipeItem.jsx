@@ -8,6 +8,7 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     const [descriptionVal, setDescriptionVal] = useState(description);
     const [authorVal, setAuthorVal] = useState(author);
     const [imageSrc, setImageSrc] = useState(imagePath);
+    const [photoFile, setPhotoFile] = useState(null);
 
     // DocumentReference
     const docRef = doc(db, "recipes", id);
@@ -46,6 +47,7 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     }, []);
     const uploadNewPhoto = async () => {
         // TODO save in recipes/{userId}/{documentId}
+        console.log(photoFile);
     };
     const deletePhoto = async () => {};
 
@@ -133,7 +135,11 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
                     }}
                 >
                     <label htmlFor="New Photo">New Photo</label>
-                    <input type="file" id="New Photo" />
+                    <input
+                        type="file"
+                        id="New Photo"
+                        onChange={e => setPhotoFile(e.target.files[0])}
+                    />
                     <button type="button" onClick={uploadNewPhoto}>
                         Upload New Photo
                     </button>
