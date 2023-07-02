@@ -1,5 +1,15 @@
 /* eslint-disable react/prop-types */
+import {
+    createUserWithEmailAndPassword,
+    deleteUser,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
+    signOut,
+    updatePassword,
+    updateProfile
+} from "firebase/auth";
 import { useState } from "react";
+import { auth } from "./firebase";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -12,8 +22,17 @@ const LoginForm = () => {
         setPassword(e.target.value);
     };
 
-    const handleSignUp = () => {};
-    const handleLogin = () => {};
+    const handleSignUp = async () => {
+        // Waktu user membuat akun baru
+        const newUser = await createUserWithEmailAndPassword(auth, email, password);
+
+        console.log(newUser);
+
+        alert("Sign up success!");
+    };
+    const handleLogin = async () => {
+        await signInWithEmailAndPassword(auth, email, password);
+    };
 
     return (
         <form
@@ -54,11 +73,23 @@ const UserProfile = ({ user }) => {
     const [displayName, setDisplayName] = useState(user.displayName);
     const [password, setPassword] = useState(user.password);
 
-    const changeDisplayName = () => {};
-    const changePassword = () => {};
-    const verifyEmail = () => {};
-    const logout = () => {};
-    const deleteAccount = () => {};
+    const changeDisplayName = async () => {
+        await updateProfile(user, {
+            displayName
+        });
+    };
+    const changePassword = async () => {
+        await updatePassword(user, password);
+    };
+    const verifyEmail = async () => {
+        await sendEmailVerification(user);
+    };
+    const logout = async () => {
+        await signOut(auth);
+    };
+    const deleteAccount = async () => {
+        await deleteUser(user);
+    };
 
     return (
         <div
