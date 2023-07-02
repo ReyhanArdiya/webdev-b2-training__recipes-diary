@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "./firebase";
+import { db, storage } from "./firebase";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     const [nameVal, setNameVal] = useState(name);
@@ -12,6 +13,9 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
 
     // DocumentReference of this recipe
     const docRef = doc(db, "recipes", id);
+
+    // TODO change this to current user later
+    const userId = "FAKE";
 
     const updateDocument = async () => {
         const newChanges = {
@@ -36,6 +40,17 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
 
     useEffect(() => {
         const getImage = async () => {
+            const imageRef = ref(storage, imagePath);
+            const imageHostUrl = await getDownloadURL(imageRef);
+
+            setImageSrc(imageHostUrl);
+        };
+
+        getImage();
+    }, [imagePath]);
+
+    useEffect(() => {
+        const getImage = async () => {
             try {
                 // Fetch the download URL
             } catch (err) {
@@ -45,21 +60,38 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
 
         getImage();
     }, []);
+
     const uploadNewPhoto = async () => {
         try {
             // TODO save in recipes/{userId}/{documentId}
-            // const imageRef = // fill this
+
+            const imageRef = ref(storage, `recipes/${userId}/${photoFile.name}`);
+
+            await uploadBytes(imageRef, photoFile, {
+                customMetadata: {
+                    isFavorite: "i dont know"
+                }
+            });
+
+            alert("Photo uploaded successfully!");
 
             // TODO update the photoPath field of the Recipe document with StorageReference.fullPath
             await updateDoc(docRef, {
-                // photoPath: storageRef.fullPath
+                photoPath: imageRef.fullPath
             });
+
+            setImageSrc(await getDownloadURL(imageRef));
         } catch (err) {
             console.log(err);
         }
     };
     const deletePhoto = async () => {
         try {
+            const imageRef = ref(storage, `recipes/${userId}/${photoFile.name}`);
+            await deleteObject(imageRef);
+
+            alert("Photo deleted successfully!");
+            setImageSrc("");
         } catch (err) {
             console.log(err);
         }
@@ -77,7 +109,13 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
                 width: "100%"
             }}
         >
-            <img src={imageSrc} alt={name} />
+            <img
+                src={imageSrc}
+                alt={name}
+                style={{
+                    width: "200px"
+                }}
+            />
 
             <div
                 style={{
@@ -157,6 +195,9 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
                     />
                     <button type="button" onClick={uploadNewPhoto}>
                         Upload New Photo
+                    </button>
+                    <button type="button" onClick={deletePhoto}>
+                        Delete Photo
                     </button>
                 </div>
             </div>
