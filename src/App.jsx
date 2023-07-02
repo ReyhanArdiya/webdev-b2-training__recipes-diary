@@ -25,12 +25,14 @@ function App() {
         <main>
             <h1>Recipes Diary</h1>
             <UserArea user={user} />
-            {user ? (
+            {/* {user ? (
                 <>
                     <RecipeForm />
                     <RecipeList />
                 </>
-            ) : null}
+            ) : null} */}
+            <RecipeForm />
+            <RecipeList />
         </main>
     );
 }

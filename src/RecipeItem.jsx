@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db, storage } from "./firebase";
+import { auth, db, storage } from "./firebase";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
@@ -14,24 +14,29 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     // DocumentReference of this recipe
     const docRef = doc(db, "recipes", id);
 
-    // TODO change this to current user later
-    const userId = "FAKE";
-
     const updateDocument = async () => {
-        const newChanges = {
-            name: nameVal,
-            description: descriptionVal,
-            author: authorVal,
-            photoPath: imageSrc
-        };
+        try {
+            const newChanges = {
+                name: nameVal,
+                description: descriptionVal,
+                author: authorVal,
+                photoPath: imageSrc
+            };
 
-        // await setDoc(docRef, newChanges, {
-        //     merge: true
-        // });
-        await updateDoc(docRef, newChanges);
+            // await setDoc(docRef, newChanges, {
+            //     merge: true
+            // });
+            await updateDoc(docRef, newChanges);
+        } catch (err) {
+            console.log(err);
+        }
     };
     const deleteDocument = async () => {
-        await deleteDoc(docRef);
+        try {
+            await deleteDoc(docRef);
+        } catch (err) {
+            console.log(err);
+        }
         // await updateDoc(docRef, {
         //     favorite: deleteField(),
         //     steps: deleteField()
@@ -65,7 +70,10 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
         try {
             // TODO save in recipes/{userId}/{documentId}
 
-            const imageRef = ref(storage, `recipes/${userId}/${photoFile.name}`);
+            const imageRef = ref(
+                storage,
+                `recipes/${auth.currentUser.uid}/${photoFile.name}`
+            );
 
             await uploadBytes(imageRef, photoFile, {
                 customMetadata: {
@@ -87,7 +95,10 @@ const RecipeItem = ({ id, name, description, author, minutes, imagePath }) => {
     };
     const deletePhoto = async () => {
         try {
-            const imageRef = ref(storage, `recipes/${userId}/${photoFile.name}`);
+            const imageRef = ref(
+                storage,
+                `recipes/${auth.currentUser.uid}/${photoFile.name}`
+            );
             await deleteObject(imageRef);
 
             alert("Photo deleted successfully!");
